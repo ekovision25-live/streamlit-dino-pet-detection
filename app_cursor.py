@@ -61,12 +61,11 @@ try:
     dinov3_model = dinov3_model.to(device).eval()
     print("✅ DINOv3 loaded.")
 except Exception as e:
-    print(f"⚠️ Primary DINOv3 load failed: {e}")
-    # Fallback to a smaller, widely mirrored model
-    fallback_model = "facebook/dinov2-small"
-    dinov3_processor, dinov3_model = _load_hf_vision_model(fallback_model)
-    dinov3_model = dinov3_model.to(device).eval()
-    print("✅ Fallback DINOv2-small loaded.")
+    st.error(
+        "Failed to load DINOv3 backbone from Hugging Face. Please set an 'HF_TOKEN' in Streamlit "
+        "secrets to increase rate limits, then redeploy."
+    )
+    raise
 
 # ======================================================
 # Load Classifiers
@@ -92,6 +91,14 @@ for i in range(num_classes):
 
 print(f"✅ {len(all_classifiers)} classifiers loaded.")
 
+# Infer expected feature dimension from first classifier
+EXPECTED_FEATURE_DIM = None
+if all_classifiers:
+    try:
+        EXPECTED_FEATURE_DIM = int(all_classifiers[0].coef_.shape[1])
+    except Exception:
+        EXPECTED_FEATURE_DIM = None
+
 # ======================================================
 # Feature Extraction using DINOv3
 # ======================================================
@@ -107,7 +114,14 @@ def extract_dinov3_features(image_crop):
     with torch.no_grad():
         outputs = dinov3_model(**inputs)
         cls_token_features = outputs.last_hidden_state[:, 0, :]
-    return cls_token_features.cpu().numpy().flatten()
+    feats = cls_token_features.cpu().numpy().flatten()
+    if EXPECTED_FEATURE_DIM is not None and feats.shape[0] != EXPECTED_FEATURE_DIM:
+        st.error(
+            f"Backbone feature size {feats.shape[0]} does not match classifier expectation "
+            f"{EXPECTED_FEATURE_DIM}. Ensure DINOv3 backbone is downloaded correctly."
+        )
+        raise ValueError("Feature dimension mismatch")
+    return feats
 
 # ======================================================
 # Real-time Prediction Logic
