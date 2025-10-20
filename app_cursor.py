@@ -11,7 +11,8 @@ from ultralytics import YOLO
 # ======================================================
 # CONFIGURATION
 # ======================================================
-BASE_PATH = "D:/Projects/Streamlit DINO"  # Ensure the path is correct
+# Resolve paths relative to this file so it works locally and on Streamlit Cloud
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 YOLO_MODEL_PATH = os.path.join(BASE_PATH, "best.pt")
 MODEL_DIR = os.path.join(BASE_PATH, "OVR_Checkpoints-20251018T053026Z-1-001", "OVR_Checkpoints")
 ENCODER_PATH = os.path.join(BASE_PATH, "dinov3_multilabel_encoder.pkl")
