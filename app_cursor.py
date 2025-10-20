@@ -30,9 +30,43 @@ yolo_model = YOLO(YOLO_MODEL_PATH)
 print("✅ YOLOv10m loaded.")
 
 dinov3_model_name = "facebook/dinov3-convnext-small-pretrain-lvd1689m"
-dinov3_processor = AutoImageProcessor.from_pretrained(dinov3_model_name)
-dinov3_model = AutoModel.from_pretrained(dinov3_model_name).to(device).eval()
-print("✅ DINOv3 loaded.")
+hf_cache_dir = os.path.join(BASE_PATH, ".hf_cache")
+os.makedirs(hf_cache_dir, exist_ok=True)
+
+# Optional: use Hugging Face token from Streamlit secrets (for Streamlit Cloud)
+hf_token = None
+try:
+    if hasattr(st, "secrets"):
+        hf_token = st.secrets.get("HF_TOKEN")
+except Exception:
+    hf_token = None
+
+def _load_hf_vision_model(model_name):
+    processor = AutoImageProcessor.from_pretrained(
+        model_name,
+        cache_dir=hf_cache_dir,
+        token=hf_token,
+        trust_remote_code=False
+    )
+    model = AutoModel.from_pretrained(
+        model_name,
+        cache_dir=hf_cache_dir,
+        token=hf_token,
+        trust_remote_code=False
+    )
+    return processor, model
+
+try:
+    dinov3_processor, dinov3_model = _load_hf_vision_model(dinov3_model_name)
+    dinov3_model = dinov3_model.to(device).eval()
+    print("✅ DINOv3 loaded.")
+except Exception as e:
+    print(f"⚠️ Primary DINOv3 load failed: {e}")
+    # Fallback to a smaller, widely mirrored model
+    fallback_model = "facebook/dinov2-small"
+    dinov3_processor, dinov3_model = _load_hf_vision_model(fallback_model)
+    dinov3_model = dinov3_model.to(device).eval()
+    print("✅ Fallback DINOv2-small loaded.")
 
 # ======================================================
 # Load Classifiers

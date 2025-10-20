@@ -6,3 +6,7 @@ enableXsrfProtection = false
 
 [browser]
 gatherUsageStats = false
+
+[secrets]
+# Optionally set your Hugging Face token in Streamlit Cloud -> Secrets
+# HF_TOKEN = ""
