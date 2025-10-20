@@ -61,11 +61,18 @@ try:
     dinov3_model = dinov3_model.to(device).eval()
     print("✅ DINOv3 loaded.")
 except Exception as e:
-    st.error(
-        "Failed to load DINOv3 backbone from Hugging Face. Please set an 'HF_TOKEN' in Streamlit "
-        "secrets to increase rate limits, then redeploy."
+    warn_msg = (
+        "Failed to load DINOv3 backbone from Hugging Face (likely missing token or rate limit). "
+        "Falling back to 'facebook/dinov2-small'. To use DINOv3, add HF_TOKEN in Streamlit secrets."
     )
-    raise
+    try:
+        st.warning(warn_msg)
+    except Exception:
+        print(warn_msg)
+    fallback_model = "facebook/dinov2-small"
+    dinov3_processor, dinov3_model = _load_hf_vision_model(fallback_model)
+    dinov3_model = dinov3_model.to(device).eval()
+    print("✅ Fallback DINOv2-small loaded.")
 
 # ======================================================
 # Load Classifiers
