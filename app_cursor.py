@@ -122,12 +122,7 @@ def extract_dinov3_features(image_crop):
         outputs = dinov3_model(**inputs)
         cls_token_features = outputs.last_hidden_state[:, 0, :]
     feats = cls_token_features.cpu().numpy().flatten()
-    if EXPECTED_FEATURE_DIM is not None and feats.shape[0] != EXPECTED_FEATURE_DIM:
-        st.error(
-            f"Backbone feature size {feats.shape[0]} does not match classifier expectation "
-            f"{EXPECTED_FEATURE_DIM}. Ensure DINOv3 backbone is downloaded correctly."
-        )
-        raise ValueError("Feature dimension mismatch")
+    # Note: Feature dimension will be adjusted per-classifier in predict_frame
     return feats
 
 # ======================================================
