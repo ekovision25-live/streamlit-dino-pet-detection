@@ -1,5 +1,5 @@
 torch
-opencv-python
+opencv-python-headless
 numpy
 joblib
 streamlit
@@ -7,3 +7,6 @@ Pillow
 transformers
 ultralytics
 scikit-learn
+onnxruntime
+protobuf<4
+typing_extensions>=4.5.0
