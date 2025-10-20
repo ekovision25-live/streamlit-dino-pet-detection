@@ -149,6 +149,21 @@ def predict_frame(img_bgr):
 
     # Classification (Probabilities)
     X_pred = features.reshape(1, -1)
+    # Ensure feature length matches what classifiers were trained on
+    try:
+        expected_dim = int(getattr(all_classifiers[0], 'n_features_in_', X_pred.shape[1]))
+    except Exception:
+        expected_dim = X_pred.shape[1]
+    if X_pred.shape[1] != expected_dim:
+        if X_pred.shape[1] < expected_dim:
+            pad_width = expected_dim - X_pred.shape[1]
+            X_pred = np.pad(X_pred, ((0,0),(0,pad_width)), mode='constant')
+        else:
+            X_pred = X_pred[:, :expected_dim]
+        try:
+            st.warning(f"Adjusted feature size from {features.shape[0]} to {expected_dim} to match classifiers.")
+        except Exception:
+            pass
     Y_proba_list = [clf.predict_proba(X_pred)[0, 1] for clf in all_classifiers]
     Y_proba = np.array(Y_proba_list)
 
