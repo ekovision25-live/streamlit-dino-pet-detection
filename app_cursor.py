@@ -246,11 +246,11 @@ def main():
         layout="wide"
     )
     
-    # Custom CSS for enhanced visuals (gradients, borders, hover effects)
+    # Custom CSS for enhanced visuals (gradients, borders, hover effects) - Updated to red-gray theme
     st.markdown("""
     <style>
     .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #B22222 0%, #696969 100%);  /* Red-gray gradient */
         color: white;
         padding: 20px;
         border-radius: 10px;
@@ -258,7 +258,7 @@ def main():
         margin-bottom: 20px;
     }
     .stButton>button {
-        background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+        background: linear-gradient(45deg, #FF6347 30%, #A9A9A9 90%);  /* Red-gray gradient for buttons */
         border: none;
         color: white;
         padding: 10px 20px;
@@ -284,7 +284,7 @@ def main():
     }
     .metric-card {
         text-align: center;
-        background: linear-gradient(45deg, #A8E6CF 30%, #FFD3A5 90%);
+        background: linear-gradient(45deg, #F08080 30%, #D3D3D3 90%);  /* Red-gray gradient for metric cards */
         border-radius: 10px;
         padding: 10px;
         margin: 5px;
@@ -306,10 +306,10 @@ def main():
         st.metric("Model Accuracy", "95%")  # Placeholder metric
         st.metric("Processed Images", "1,234")  # Placeholder
     
-    # Main header with visual appeal
+    # Main header with visual appeal - Removed magnifying glass emoji (🔍)
     st.markdown("""
     <div class="main-header">
-        <h1>🔍 Ekovision PET Detection Model</h1>
+        <h1>Ekovision PET Detection Model</h1>
         <p>Detect and classify PET bottles with cutting-edge AI technology!</p>
     </div>
     """, unsafe_allow_html=True)
@@ -451,6 +451,7 @@ def main():
     # Footer
     st.markdown("---")
     st.markdown("**Powered by Streamlit & AI Models** | Built with Ekolabs.")
+
 
 
 
