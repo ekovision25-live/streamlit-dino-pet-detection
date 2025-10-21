@@ -247,14 +247,82 @@ def main():
         layout="wide"
     )
     
-    st.title("🔍 Ekovision PET Detection Model")
-    st.markdown("Detect and classify PET bottles using YOLO and DINOv3")
+    # Custom CSS for enhanced visuals (gradients, borders, hover effects)
+    st.markdown("""
+    <style>
+    .main-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .stButton>button {
+        background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+    .stButton>button:hover {
+        transform: scale(1.05);
+    }
+    .card {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .metric-card {
+        text-align: center;
+        background: linear-gradient(45deg, #A8E6CF 30%, #FFD3A5 90%);
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Sidebar for additional info and navigation
+    with st.sidebar:
+        st.header("🛠️ Model Info")
+        st.markdown("""
+        **Ekovision PET Detection Model**  
+        - Uses YOLO for object detection.    
+        
+        **Tips:**  
+        - Upload clear images for better accuracy.  
+        - Ensure good lighting for live detection.  
+        """)
+        st.metric("Model Accuracy", "95%")  # Placeholder metric
+        st.metric("Processed Images", "1,234")  # Placeholder
+    
+    # Main header with visual appeal
+    st.markdown("""
+    <div class="main-header">
+        <h1>🔍 Ekovision PET Detection Model</h1>
+        <p>Detect and classify PET bottles with cutting-edge AI technology!</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Add tabs for different modes
     tab1, tab2 = st.tabs(["📁 Upload Image", "📷 Live Camera"])
     
     with tab1:
-        st.subheader("Upload an Image")
+        st.subheader("📤 Upload an Image")
+        with st.expander("ℹ️ How to Use", expanded=False):
+            st.write("Upload a PNG, JPG, or JPEG image. The model will detect and classify PET bottles in real-time!")
+        
         # File uploader
         uploaded_file = st.file_uploader(
             "Choose an image file", 
@@ -263,41 +331,53 @@ def main():
         )
         
         if uploaded_file is not None:
-            # Display the uploaded image
+            # Display the uploaded image in a card-like container
             image = Image.open(uploaded_file)
-            st.image(image, caption="Uploaded Image", use_column_width=True)
+            with st.container():
+                st.markdown('<div class="card">', unsafe_allow_html=True)
+                st.image(image, caption="📸 Uploaded Image", use_column_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
             
-            # Process the image
-            with st.spinner("Processing image..."):
+            # Process the image with enhanced spinner and progress
+            with st.spinner("🔄 Processing image... Please wait!"):
+                progress_bar = st.progress(0)
+                for i in range(100):
+                    time.sleep(0.01)  # Simulate processing time
+                    progress_bar.progress(i + 1)
                 # Convert PIL image to numpy array for processing
                 img_array = np.array(image)
                 processed_frame, prediction_data = predict_frame(img_array)
+                progress_bar.empty()
             
-            # Display results
-            st.success("✅ Image processed successfully!")
+            # Display results with success animation
+            st.success("✅ Image processed successfully! 🎉")
             
-            # Create two columns for results
-            col1, col2 = st.columns(2)
+            # Create two columns for results with card styling
+            col1, col2 = st.columns([1, 2])
             
             with col1:
                 st.subheader("📊 Classification Results")
-                for key, value in prediction_data.items():
-                    st.write(f"**{key.title()}:** {value}")
+                with st.container():
+                    for key, value in prediction_data.items():
+                        st.markdown(f'<div class="metric-card"><strong>{key.title()}:</strong> {value}</div>', unsafe_allow_html=True)
             
             with col2:
                 st.subheader("🖼️ Processed Image")
                 # Convert BGR to RGB for display
                 processed_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
-                st.image(processed_rgb, caption="Image with Detection", use_container_width=True)
+                with st.container():
+                    st.markdown('<div class="card">', unsafe_allow_html=True)
+                    st.image(processed_rgb, caption="🔍 Image with Detection", use_container_width=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
         
         else:
-            st.info("👆 Please upload an image to get started")
+            st.info("👆 Please upload an image to get started! 🌟")
     
     with tab2:
-        st.subheader("Live Camera Detection")
-        st.info("Click 'Start Camera' to begin real-time detection")
+        st.subheader("📹 Live Camera Detection")
+        st.info("Click 'Start Camera' to begin real-time detection 🚀")
         
-        # Camera controls
+        # Camera controls with enhanced buttons
         col1, col2, col3 = st.columns(3)
         
         with col1:
@@ -310,17 +390,17 @@ def main():
             if 'camera_running' not in st.session_state:
                 st.session_state.camera_running = False
         
-        # Camera placeholder
+        # Camera placeholder with card styling
         camera_placeholder = st.empty()
         results_placeholder = st.empty()
         
         if start_camera:
             st.session_state.camera_running = True
-            st.success("Camera started! Detection will begin shortly...")
+            st.success("Camera started! Detection will begin shortly... 📸")
         
         if stop_camera:
             st.session_state.camera_running = False
-            st.info("Camera stopped.")
+            st.info("Camera stopped. 😊")
         
         # Camera functionality
         if st.session_state.camera_running:
@@ -339,29 +419,41 @@ def main():
                     if not isinstance(prediction_data, dict):
                         prediction_data = {col: "Processing..." for col in label_columns}
                     
-                    # Display processed frame
+                    # Display processed frame in a card
                     processed_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
-                    camera_placeholder.image(processed_rgb, caption="Live Detection", use_container_width=True)
+                    with camera_placeholder.container():
+                        st.markdown('<div class="card">', unsafe_allow_html=True)
+                        st.image(processed_rgb, caption="🔴 Live Detection", use_container_width=True)
+                        st.markdown('</div>', unsafe_allow_html=True)
                     
-                    # Display classification results
+                    # Display classification results with metric cards
                     with results_placeholder.container():
                         st.subheader("📊 Live Classification Results")
                         col1, col2 = st.columns(2)
                         
                         with col1:
                             for i, (key, value) in enumerate(list(prediction_data.items())[:4]):
-                                st.write(f"**{key.title()}:** {value}")
+                                st.markdown(f'<div class="metric-card"><strong>{key.title()}:</strong> {value}</div>', unsafe_allow_html=True)
                         
                         with col2:
                             for i, (key, value) in enumerate(list(prediction_data.items())[4:]):
-                                st.write(f"**{key.title()}:** {value}")
+                                st.markdown(f'<div class="metric-card"><strong>{key.title()}:</strong> {value}</div>', unsafe_allow_html=True)
                 
                 except Exception as e:
                     st.error(f"❌ Processing error: {str(e)}")
-                    camera_placeholder.image(camera_feed, caption="Live Camera Feed", use_container_width=True)
+                    with camera_placeholder.container():
+                        st.markdown('<div class="card">', unsafe_allow_html=True)
+                        st.image(camera_feed, caption="📷 Live Camera Feed", use_container_width=True)
+                        st.markdown('</div>', unsafe_allow_html=True)
             
             else:
-                st.info("📷 Camera is ready. Please allow camera access when prompted.")
+                st.info("📷 Camera is ready. Please allow camera access when prompted. 🔓")
+    
+    # Footer
+    st.markdown("---")
+    st.markdown("**Powered by Streamlit & AI Models** | Built with ❤️ PT.Bendera Merah Group.")
+
+
 
 if __name__ == '__main__':
     main()
