@@ -243,7 +243,7 @@ def predict_frame(img_bgr):
 def main():
     st.set_page_config(
         page_title="Ekovision PET Detection Model",
-        page_icon="🔍",
+        page_icon="",
         layout="wide"
     )
     
@@ -451,7 +451,7 @@ def main():
     
     # Footer
     st.markdown("---")
-    st.markdown("**Powered by Streamlit & AI Models** | Built with ❤️ PT.Bendera Merah Group.")
+    st.markdown("**Powered by Streamlit & AI Models** | Built with Ekolabs.")
 
 
 
