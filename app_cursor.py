@@ -192,11 +192,11 @@ def predict_frame(img_bgr):
         
         # Use high confidence thresholds (75-80% minimum)
         if col == 'product':
-            threshold = 0.75  # 75% minimum for product classification
+            threshold = 0.90  # 75% minimum for product classification
         elif col in ['brand', 'type']:
-            threshold = 0.70  # 70% minimum for important categories
+            threshold = 0.80  # 70% minimum for important categories
         else:
-            threshold = 0.65  # 65% minimum for other categories
+            threshold = 0.75  # 65% minimum for other categories
         
         if best_proba > threshold:
             if best_proba > 0.90:
