@@ -298,7 +298,7 @@ def main():
         st.header("🛠️ Model Info")
         st.markdown("""
         **Ekovision PET Detection Model**  
-        - Uses YOLO for object detection.    
+           
         
         **Tips:**  
         - Upload clear images for better accuracy.  
