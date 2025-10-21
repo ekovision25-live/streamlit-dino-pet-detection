@@ -334,7 +334,7 @@ def main():
             image = Image.open(uploaded_file)
             with st.container():
                 st.markdown('<div class="card">', unsafe_allow_html=True)
-                st.image(image, caption="📸 Uploaded Image", use_column_width=True)
+                st.image(image, caption="🖼️ Uploaded Image", use_column_width=True)  # Changed to more elegant emoji
                 st.markdown('</div>', unsafe_allow_html=True)
             
             # Process the image with enhanced spinner and progress
@@ -349,7 +349,7 @@ def main():
                 progress_bar.empty()
             
             # Display results with success animation
-            st.success("✅ Image processed successfully! 🎉")
+            st.success("✅ Image processed successfully!")  # Removed playful emoji
             
             # Create two columns for results with card styling
             col1, col2 = st.columns([1, 2])
@@ -366,15 +366,15 @@ def main():
                 processed_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
                 with st.container():
                     st.markdown('<div class="card">', unsafe_allow_html=True)
-                    st.image(processed_rgb, caption="🔍 Image with Detection", use_container_width=True)
+                    st.image(processed_rgb, caption="🖼️ Image with Detection", use_container_width=True)  # Changed to more elegant emoji
                     st.markdown('</div>', unsafe_allow_html=True)
         
         else:
-            st.info("👆 Please upload an image to get started! 🌟")
+            st.info("Please upload an image to get started.")  # Removed casual emojis
     
     with tab2:
         st.subheader("📹 Live Camera Detection")
-        st.info("Click 'Start Camera' to begin real-time detection 🚀")
+        st.info("Click 'Start Camera' to begin real-time detection.")  # Removed playful emoji
         
         # Camera controls with enhanced buttons
         col1, col2, col3 = st.columns(3)
@@ -395,11 +395,11 @@ def main():
         
         if start_camera:
             st.session_state.camera_running = True
-            st.success("Camera started! Detection will begin shortly... 📸")
+            st.success("Camera started! Detection will begin shortly.")  # Removed playful emoji
         
         if stop_camera:
             st.session_state.camera_running = False
-            st.info("Camera stopped. 😊")
+            st.info("Camera stopped.")  # Removed playful emoji
         
         # Camera functionality
         if st.session_state.camera_running:
@@ -422,7 +422,7 @@ def main():
                     processed_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
                     with camera_placeholder.container():
                         st.markdown('<div class="card">', unsafe_allow_html=True)
-                        st.image(processed_rgb, caption="🔴 Live Detection", use_container_width=True)
+                        st.image(processed_rgb, caption="📹 Live Detection", use_container_width=True)  # Changed to more elegant emoji
                         st.markdown('</div>', unsafe_allow_html=True)
                     
                     # Display classification results with metric cards
@@ -446,11 +446,12 @@ def main():
                         st.markdown('</div>', unsafe_allow_html=True)
             
             else:
-                st.info("📷 Camera is ready. Please allow camera access when prompted. 🔓")
+                st.info("Camera is ready. Please allow camera access when prompted.")  # Removed casual emoji
     
     # Footer
     st.markdown("---")
     st.markdown("**Powered by Streamlit & AI Models** | Built with Ekolabs.")
+
 
 
 
